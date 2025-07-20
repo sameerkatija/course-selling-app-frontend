@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import useAuthStore from "../store/auth";
 
 export default function Navbar() {
+  const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Check if user is logged in (you can modify this logic based on your auth system)
-  const isLoggedIn = localStorage.getItem("token");
+  const isLoggedIn = !!user;
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/login");
   };
 
@@ -184,7 +186,7 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={handleLogout}
-                    className="flex items-center space-x-2 text-gray-700 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                    className=" cursor-pointer flex items-center space-x-2 text-gray-700 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
                   >
                     <svg
                       className="w-5 h-5"

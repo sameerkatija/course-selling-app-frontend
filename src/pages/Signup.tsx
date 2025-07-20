@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import useAuthStore from "../store/auth";
 
 export default function Signup() {
   const navigate = useNavigate();
-
+  const { setUser, setToken } = useAuthStore();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -43,10 +50,8 @@ export default function Signup() {
         email,
         password,
       });
-
-      const token = res.data.token;
-      localStorage.setItem("token", token);
-
+      setToken(res.data.token);
+      setUser(res.data.user);
       navigate("/student/dashboard");
     } catch (err) {
       setError(

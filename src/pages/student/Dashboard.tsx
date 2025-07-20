@@ -1,30 +1,28 @@
 // Dashboard.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../../store/auth";
 
 export default function Dashboard() {
+  const { user, token } = useAuthStore();
   const navigate = useNavigate();
+
   const [stats] = useState({
     totalCourses: 12,
     completedCourses: 8,
     inProgress: 3,
     certificates: 5,
   });
-  useEffect(() => {
-    const token = localStorage.getItem("token");
 
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-  });
   return (
-    <div className="min-h-[calc(100vh-4rem)] px-4 py-8">
+    <div className="px-4 py-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
           <p className="text-gray-600">
-            Welcome back! Here's your learning progress.
+            Welcome back,{" "}
+            <span className=" font-bold underline">{user?.first_name}</span>!
+            Here's your learning progress.
           </p>
         </div>
 

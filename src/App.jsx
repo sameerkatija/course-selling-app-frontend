@@ -16,8 +16,31 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLayout from "./pages/admin/AdminLayout";
 import StudentSetting from "./pages/student/Setting";
 import NotFoundPage from "./pages/NotFound";
+import { useEffect } from "react";
+import useAuthStore from "./store/auth";
+import axios from "axios";
+import UsersTable from "./pages/admin/UsersTable";
+import StudentsTable from "./pages/admin/StudentsTable";
+import TeachersTable from "./pages/admin/TeachersTable";
+import CoursesTable from "./pages/admin/CoursesTable";
 
 function App() {
+  const { setUser, token } = useAuthStore();
+  const handleUserState = async (token) => {
+    const user = await axios({
+      method: "get",
+      url: "http://localhost:8010/api/me",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setUser(user.data.user);
+  };
+  useEffect(() => {
+    if (token) {
+      handleUserState(token);
+    }
+  }, []);
   return (
     <>
       <Router>
@@ -52,6 +75,10 @@ function App() {
                 element={<Navigate to="/admin/dashboard" replace />}
               />
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<UsersTable />} />
+              <Route path="students" element={<StudentsTable />} />
+              <Route path="teachers" element={<TeachersTable />} />
+              <Route path="courses" element={<CoursesTable />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />
